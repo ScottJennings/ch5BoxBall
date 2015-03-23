@@ -9,6 +9,8 @@ import java.awt.geom.*;
  *
  * This movement can be initiated by repeated calls to the "move" method.
  * 
+ * @author Scott Jennings
+ * 
  * @author Bill Crosbie
  * 
  * @author Michael Kölling (mik)
@@ -71,7 +73,7 @@ public class BouncingBall
     }    
 
     /**
-     * Move this ball according to its position and speed and redraw.
+     * Move this ball according to its position and speed and redraw.wall
      **/
     public void move()
     {

@@ -1,4 +1,6 @@
 import java.awt.Color;
+import java.awt.Rectangle;
+import java.util.ArrayList;
 
 /**
  * Class BallDemo - a short demonstration showing animation with the 
@@ -11,22 +13,37 @@ import java.awt.Color;
 public class BallDemo   
 {
     private Canvas myCanvas;
+    private Rectangle bounds;
+    private int numBalls;
+    ArrayList<BoxBall> ballsInPlay;
 
     /**
      * Create a BallDemo object. Creates a fresh canvas and makes it visible.
      */
-    public BallDemo()
+    public BallDemo(int balls)
     {
         myCanvas = new Canvas("Ball Demo", 600, 500);
+        bounds = new Rectangle(50, 50, 500, 400);
+        myCanvas.draw(bounds);
+        numBalls = balls;
+        ballsInPlay = new ArrayList<BoxBall>();
     }
 
     public void boxBounce(){
-        BoxBall ball = new BoxBall(50, 50, 16, Color.BLUE, myCanvas);
-        ball.draw();
         
-           while(true) {
+        // create the balls and put them in a list
+        for (int i=0; i<numBalls; i++) {
+            BoxBall ball = new BoxBall(24, Color.BLUE, myCanvas, bounds);
+            ball.draw();
+            ballsInPlay.add(ball);
+        }
+        
+        // move the balls
+        while(true) {
             myCanvas.wait(50);           // small delay
-            ball.move();
+            for (BoxBall currBall : ballsInPlay) {
+                currBall.move();
+            }
         }
     }
     

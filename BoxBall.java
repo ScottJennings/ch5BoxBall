@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.geom.*;
+import java.lang.Math.*;
+import java.util.*;
 
 /**
  * Class BoxBall - a graphical ball that moves at a constant rate in
@@ -10,7 +12,8 @@ import java.awt.geom.*;
  *
  * This movement can be initiated by repeated calls to the "move" method.
  * 
- * @author Bill Crosbie
+ * @author Scott Jennings
+ * @version 2015 BB
  * 
  * @version 2011.07.31
  */
@@ -30,8 +33,9 @@ public class BoxBall
     private final int leftWall;            // x position of left Wall
     private final int rightWall;           // x position of right Wall
     private Canvas canvas;
-    private int ySpeed = 4 ;                // initial downward speed
-    private int xSpeed = 7;
+    private int ySpeed;                // initial downward speed
+    private int xSpeed;
+    private Rectangle innerBox;
 
     /**
      * Constructor for objects of class BoxBall
@@ -42,11 +46,11 @@ public class BoxBall
      * @param ballColor  the color of the ball
      * @param drawingCanvas  the canvas to draw this ball on
      */
-    public BoxBall(int xPos, int yPos, int ballDiameter, Color ballColor,
-                        Canvas drawingCanvas)
+    public BoxBall(int ballDiameter, Color ballColor,
+                        Canvas drawingCanvas, Rectangle bounds)
     {
-        xPosition = xPos;
-        yPosition = yPos;
+        //xPosition = xPos;
+        //yPosition = yPos;
         color = ballColor;
         diameter = ballDiameter;
         //groundPosition = groundPos;
@@ -55,6 +59,14 @@ public class BoxBall
         rightWall = 600;
         topWall = 0;
         bottomWall = 500;
+        innerBox = bounds;
+        Random speedPicker = new Random();
+        xSpeed = speedPicker.nextInt(8) + 1; //random speed between 1 and 8 inclusive
+        ySpeed = xSpeed;
+        Random posPicker = new Random();
+        xPosition = posPicker.nextInt((int)innerBox.getWidth() - diameter) + (int)innerBox.getX(); //random x starting position
+        yPosition = posPicker.nextInt((int)innerBox.getHeight() - diameter) + (int)innerBox.getY(); //random y starting position
+        System.out.println("ball created with speed " + xSpeed + " at position <" + xPosition + "," + yPosition + ">");
     }
 
     /**
@@ -93,9 +105,10 @@ public class BoxBall
 //             ySpeed = -ySpeed + ballDegradation; 
 //         }
 
+/**
         // WALL CHECKS
         if (xPosition < leftWall ) {
-            xSpeed = -xSpeed;
+           xSpeed = -xSpeed;
         }
         
         if (xPosition > rightWall ) {
@@ -109,7 +122,27 @@ public class BoxBall
         if (yPosition > bottomWall ) {
             ySpeed = -ySpeed;
         }
+**/       
+        // BOUNDS CHECKS
+        if ((xPosition - Math.abs(xSpeed)) <= innerBox.getX() ) {
+           xPosition++;
+           xSpeed = -xSpeed;
+        }
         
+        if ((xPosition + Math.abs(xSpeed) + diameter) >= (innerBox.getX() + innerBox.getWidth())){
+            xPosition--;
+            xSpeed = -xSpeed;
+        }
+        
+        if ((yPosition - Math.abs(ySpeed)) <= innerBox.getY()) {
+            yPosition++;
+            ySpeed = -ySpeed;
+        }
+        
+        if ((yPosition + Math.abs(ySpeed) + diameter) > (innerBox.getY() + innerBox.getHeight())) {
+            yPosition--;
+            ySpeed = -ySpeed;
+        }
 
         // draw again at new position
         draw();
